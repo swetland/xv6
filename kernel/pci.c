@@ -71,7 +71,7 @@ static void pciprobe(uint32 bus, uint32 dev, uint32 fun, struct pci_info *pci) {
   pci->header_type = n >> 24;
 
 #if PCI_DEBUG
-  cprintf("PCI %d:%d.%d V=%x D=%x C=%x/%x/%x",
+  cprintf("%d:%d.%d V=%x D=%x C=%x/%x/%x",
     bus, dev, fun, pci->vendor_id, pci->device_id,
     pci->class_code, pci->subclass, pci->prog_if);
 #endif
@@ -106,18 +106,15 @@ static void pciprobe(uint32 bus, uint32 dev, uint32 fun, struct pci_info *pci) {
     pci->int_pin = n >> 8;
     pci->int_line = n;
 #if PCI_DEBUG
-    cprintf(" IRQ=%d/%d\n", pci->int_line, pci->int_pin);
+    cprintf(" I=%d/%d [", pci->int_line, pci->int_pin);
     for (i = 0; i < 6; i++) {
       if (pci->base[i] == 0)
         continue;
-      cprintf("  BAR%d: %x-%x %s %s%s\n", i,
-        pci->base[i], pci->base[i] + pci->size[i] - 1,
-        pci->kind[i] & 1 ? "IO" : "MEM",
-        pci_bar_type[(pci->kind[i] >> 1) & 3],
-        pci->kind[i] & 4 ? " PREF" : "");
+      cprintf(" %d:%x-%x", i, pci->base[i], pci->base[i] + pci->size[i] - 1);
       if ((pci->kind[i] & 6) == 2)
         i++;
     }
+    cprintf(" ]\n");
 #endif
     break;
   case 0x01: // Bridge
