@@ -11,7 +11,9 @@
 #include "../include/stat.h"
 #include "../include/param.h"
 
-#define static_assert(a, b) do { switch (0) case 0: case (a): ; } while (0)
+#ifndef static_assert
+# define static_assert(a, b) do { switch (0) case 0: case (a): ; } while (0)
+#endif // static_assert
 
 int nblocks = 985;
 int nlog = LOGSIZE;
